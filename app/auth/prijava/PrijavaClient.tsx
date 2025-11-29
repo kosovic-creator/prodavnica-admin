@@ -108,7 +108,7 @@ export default function PrijavaClient({ lang }: PrijavaClientProps) {
         const sessionRes = await fetch("/api/auth/session");
         const session = await sessionRes.json();
         if (session?.user?.uloga === "admin") {
-          router.push("/admin");
+          router.push("/");
         } else {
           router.push("/");
         }
