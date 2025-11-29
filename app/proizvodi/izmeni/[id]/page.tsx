@@ -4,7 +4,7 @@
 import React, { useEffect, useState, Suspense, useTransition } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { noviProizvodSchemaStatic } from '@/zod';
-import ImageUpload from '@/components/ImageUpload';
+import ImageUpload from '../../../components/ImageUpload';
 import { FaSave, FaTimes } from 'react-icons/fa';
 import { Proizvod } from '@/types';
 import { getProizvodById, updateProizvod } from '@/lib/actions/proizvodi';
