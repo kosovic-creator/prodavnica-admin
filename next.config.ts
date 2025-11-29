@@ -1,7 +1,28 @@
-import type { NextConfig } from "next";
+import path from "path";
+import type { Configuration } from "webpack";
 
-const nextConfig: NextConfig = {
-  /* config options here */
+const nextConfig = {
+  turbopack: {},
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+    qualities: [90],
+  },
+  serverActions: {
+    bodySizeLimit: '10mb', // ili koliko ti treba
+  },
+  webpack: (config: Configuration): Configuration => {
+    if (config.resolve && config.resolve.alias) {
+      (config.resolve.alias as Record<string, string>)['@'] = path.resolve(__dirname);
+    }
+    return config;
+  },
 };
 
 export default nextConfig;

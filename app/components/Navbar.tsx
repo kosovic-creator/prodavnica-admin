@@ -20,22 +20,22 @@ export default function Navbar() {
       isActive: pathname === '/'
     },
     {
-      href: '//korisnici',
+      href: '/korisnici',
       label: 'Korisnici',
       icon: FaUsers,
-      isActive: pathname.startsWith('//korisnici')
+      isActive: pathname.startsWith('/korisnici')
     },
     {
-      href: '//proizvodi',
+      href: '/proizvodi',
       label: 'Proizvodi',
       icon: FaBox,
-      isActive: pathname.startsWith('//proizvodi')
+      isActive: pathname.startsWith('/proizvodi')
     },
     {
-      href: '//porudzbine',
+      href: '/porudzbine',
       label: 'Porudžbine',
       icon: FaShoppingCart,
-      isActive: pathname.startsWith('//porudzbine')
+      isActive: pathname.startsWith('/porudzbine')
     }
   ];
 
