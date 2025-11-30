@@ -16,25 +16,25 @@ export default function ProizvodLayoutClient({ children, id }: ProizvodLayoutCli
   // Navigation tabs for individual product
   const tabs = [
     {
-      href: `/admin/proizvodi/${id}/pregled`,
+      href: `/proizvodi/${id}/pregled`,
       label: 'Pregled',
       icon: FaEye,
       isActive: pathname.includes('/pregled')
     },
     {
-      href: `/admin/proizvodi/izmeni/${id}`,
+      href: `/proizvodi/izmeni/${id}`,
       label: 'Izmeni',
       icon: FaEdit,
       isActive: pathname.includes('/izmeni')
     },
     {
-      href: `/admin/proizvodi/${id}/historija`,
+      href: `/proizvodi/${id}/historija`,
       label: 'Historija',
       icon: FaHistory,
       isActive: pathname.includes('/historija')
     },
     {
-      href: `/admin/proizvodi/${id}/statistike`,
+      href: `/proizvodi/${id}/statistike`,
       label: 'Statistike',
       icon: FaChartLine,
       isActive: pathname.includes('/statistike')

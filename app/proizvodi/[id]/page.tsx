@@ -8,5 +8,5 @@ export default async function ProizvodPage({ params }: ProizvodPageProps) {
   const { id } = await params;
 
   // Redirect to pregled by default
-  redirect(`/admin/proizvodi/${id}/pregled`);
+  redirect(`/proizvodi/${id}/pregled`);
 }

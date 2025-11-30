@@ -109,13 +109,13 @@ const ProizvodPage = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button
                       className="text-blue-600 hover:text-blue-900 mr-3 cursor-pointer"
-                      onClick={() => router.push(`/admin/proizvodi/${proizvod.id}/pregled`)}
+                      onClick={() => router.push(`/proizvodi/${proizvod.id}/pregled`)}
                     >
                       Detalji
                     </button>
                     <button
                       className="text-green-600 hover:text-green-900 mr-3 cursor-pointer"
-                      onClick={() => router.push(`/admin/proizvodi/izmeni/${proizvod.id}`)}
+                      onClick={() => router.push(`/proizvodi/izmeni/${proizvod.id}`)}
                     >
                       Izmeni
                     </button>

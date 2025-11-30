@@ -26,21 +26,21 @@ export default function AdminDashboard() {
 
   const quickActions = [
     {
-      href: '/admin/korisnici',
+      href: '/korisnici',
       label: 'Upravljanje korisnicima',
       icon: FaUsers,
       color: 'blue',
       description: 'Dodaj, izmijeni ili ukloni korisnike'
     },
     {
-      href: '/admin/proizvodi',
+      href: '/proizvodi',
       label: 'Upravljanje proizvodima',
       icon: FaBoxOpen,
       color: 'green',
       description: 'Dodaj novi proizvod ili ažuriraj postojeće'
     },
     {
-      href: '/admin/porudzbine',
+      href: '/porudzbine',
       label: 'Pregled porudžbina',
       icon: FaShoppingCart,
       color: 'orange',

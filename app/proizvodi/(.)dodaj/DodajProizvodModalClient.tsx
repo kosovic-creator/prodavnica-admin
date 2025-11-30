@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaTimes, FaSave, FaBox } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
-import ImageUpload from '../../components/ImageUpload';
+import CloudinaryUpload from '../../components/CloudinaryUpload';
 
 export default function DodajProizvodModalClient() {
   const router = useRouter();
@@ -222,11 +222,7 @@ export default function DodajProizvodModalClient() {
             />
           </div>
           {/* Image Upload */}
-          <ImageUpload
-            currentImage={form.slika}
-            onImageChange={handleImageChange}
-            onImageRemove={handleImageRemove}
-            productId={productId}
+          <CloudinaryUpload
           />
 
           {/* Actions */}
@@ -252,7 +248,7 @@ export default function DodajProizvodModalClient() {
           <div className="pt-4 border-t border-gray-200">
             <button
               type="button"
-              onClick={() => router.push('/admin/proizvodi/dodaj')}
+              onClick={() => router.push('/proizvodi/dodaj')}
               className="text-blue-600 hover:text-blue-700 text-sm font-medium"
             >
               Otvori kompletan form za dodavanje →

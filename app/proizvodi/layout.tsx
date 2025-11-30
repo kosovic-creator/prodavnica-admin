@@ -32,16 +32,16 @@ export default function ProizvodiLayout({ children }: ProizvodiLayoutProps) {
   // Navigation items
   const navItems = [
     {
-      href: '/admin/proizvodi',
+      href: '/proizvodi',
       label: 'Svi proizvodi',
       icon: FaBoxes,
-      isActive: pathname === '/admin/proizvodi'
+      isActive: pathname === '/proizvodi'
     },
     {
-      href: '/admin/proizvodi/dodaj',
+      href: '/proizvodi/dodaj',
       label: 'Dodaj proizvod',
       icon: FaPlus,
-      isActive: pathname === '/admin/proizvodi/dodaj'
+      isActive: pathname === '/proizvodi/dodaj'
     }
   ];
 
@@ -75,8 +75,8 @@ export default function ProizvodiLayout({ children }: ProizvodiLayoutProps) {
               Upravljanje proizvodima
             </h1>
             <p className="text-gray-600 mt-1">
-              {pathname === '/admin/proizvodi' && 'Pregled i upravljanje inventarom proizvoda'}
-              {pathname === '/admin/proizvodi/dodaj' && 'Dodaj novi proizvod u inventar'}
+              {pathname === '/proizvodi' && 'Pregled i upravljanje inventarom proizvoda'}
+              {pathname === '/proizvodi/dodaj' && 'Dodaj novi proizvod u inventar'}
               {pathname.includes('/izmeni/') && 'Izmijeni postojeći proizvod'}
             </p>
           </div>
@@ -106,7 +106,7 @@ export default function ProizvodiLayout({ children }: ProizvodiLayoutProps) {
             {/* Additional actions based on current page */}
             {pathname.includes('/izmeni/') && (
               <Link
-                href={`/admin/proizvodi/${pathname.split('/').pop()}/pregled`}
+                href={`/proizvodi/${pathname.split('/').pop()}/pregled`}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-green-100 text-green-700 hover:bg-green-200 transition-all"
               >
                 <FaEye className="w-4 h-4" />
