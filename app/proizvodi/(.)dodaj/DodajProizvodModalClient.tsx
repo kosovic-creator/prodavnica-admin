@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaTimes, FaSave, FaBox } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
-import ImageUpload from '@/components/ImageUpload';
+import ImageUpload from '../../components/ImageUpload';
 
 export default function DodajProizvodModalClient() {
   const router = useRouter();
@@ -19,6 +19,8 @@ export default function DodajProizvodModalClient() {
     kolicina: '',
     slika: ''
   });
+
+  const [productId] = useState(() => `new-${Date.now()}`);
 
   const handleClose = () => {
     router.back();
@@ -220,15 +222,12 @@ export default function DodajProizvodModalClient() {
             />
           </div>
           {/* Image Upload */}
-          <div className="mb-6">
-            <h3 className="text-lg font-medium mb-4 text-gray-700">Slika proizvoda</h3>
-            <ImageUpload
-              currentImage={form.slika}
-              onImageChange={handleImageChange}
-              onImageRemove={handleImageRemove}
-              productId={`new-${Date.now()}`}
-            />
-          </div>
+          <ImageUpload
+            currentImage={form.slika}
+            onImageChange={handleImageChange}
+            onImageRemove={handleImageRemove}
+            productId={productId}
+          />
 
           {/* Actions */}
           <div className="flex gap-3 pt-4 border-t border-gray-200">
