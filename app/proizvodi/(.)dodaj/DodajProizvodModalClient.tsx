@@ -1,76 +1,39 @@
-'use client';
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+"use client";
 import { FaTimes, FaSave, FaBox } from 'react-icons/fa';
-import { toast } from 'react-hot-toast';
 import CloudinaryUpload from '../../components/CloudinaryUpload';
+import { createProizvod } from '@/lib/actions/proizvodi';
+import { redirect, useRouter } from 'next/navigation';
+import React, { useRef, useState } from 'react';
 
 export default function DodajProizvodModalClient() {
   const router = useRouter();
-  const [form, setForm] = useState({
-    naziv_sr: '',
-    naziv_en: '',
-    opis_sr: '',
-    opis_en: '',
-    kategorija_sr: '',
-    kategorija_en: '',
-    cena: '',
-    kolicina: '',
-    slika: ''
-  });
+  const [imageUrl, setImageUrl] = useState('');
+  const slikaInputRef = useRef<HTMLInputElement>(null);
 
-  const [productId] = useState(() => `new-${Date.now()}`);
+  async function serverAction(formData: FormData) {
+    const data = {
+      naziv_sr: formData.get('naziv_sr') as string,
+      naziv_en: formData.get('naziv_en') as string,
+      opis_sr: formData.get('opis_sr') as string,
+      opis_en: formData.get('opis_en') as string,
+      kategorija_sr: formData.get('kategorija_sr') as string,
+      kategorija_en: formData.get('kategorija_en') as string,
+      cena: Number(formData.get('cena')),
+      kolicina: Number(formData.get('kolicina')),
+      slike: formData.get('slika') ? [formData.get('slika') as string] : [],
+    };
+    const res = await createProizvod(data);
+    if (res?.success) {
+      redirect('/proizvodi');
+    }
+  }
 
-  const handleClose = () => {
-    router.back();
-  };
-
-  const handleBackdropClick = (e: React.MouseEvent) => {
+  function handleBackdropClick(e: React.MouseEvent) {
     if (e.target === e.currentTarget) {
-      handleClose();
+      redirect('/proizvodi');
     }
-  };
-
-  const handleImageChange = (imageUrl: string) => {
-    setForm((prev) => ({ ...prev, slika: imageUrl }));
-  };
-
-  const handleImageRemove = () => {
-    setForm((prev) => ({ ...prev, slika: '' }));
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const payload = {
-        ...form,
-        cena: form.cena ? parseFloat(form.cena) : 0,
-        kolicina: form.kolicina ? parseInt(form.kolicina) : 0,
-      };
-      const res = await fetch('/api/proizvodi', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-      if (res.ok) {
-        toast.success('Proizvod je uspešno dodat!');
-        handleClose();
-      } else {
-        const data = await res.json();
-        toast.error(data.error || 'Greška pri dodavanju proizvoda');
-      }
-    } catch {
-      toast.error('Greška pri dodavanju proizvoda');
-    }
-  };
+  }
 
   return (
     <div
@@ -85,7 +48,7 @@ export default function DodajProizvodModalClient() {
             <h2 className="text-2xl font-bold text-gray-900">Brzo dodavanje proizvoda</h2>
           </div>
           <button
-            onClick={handleClose}
+            onClick={() => redirect('/proizvodi')}
             className="p-2 hover:bg-gray-100 rounded-full transition-colors"
           >
             <FaTimes className="w-5 h-5 text-gray-500" />
@@ -93,7 +56,7 @@ export default function DodajProizvodModalClient() {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        <form action={serverAction} className="p-6 space-y-6">
           {/* Basic Info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -103,8 +66,6 @@ export default function DodajProizvodModalClient() {
               <input
                 type="text"
                 name="naziv_sr"
-                value={form.naziv_sr}
-                onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Unesite naziv proizvoda"
                 required
@@ -118,8 +79,6 @@ export default function DodajProizvodModalClient() {
               <input
                 type="text"
                 name="naziv_en"
-                value={form.naziv_en}
-                onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Enter product name"
               />
@@ -135,8 +94,6 @@ export default function DodajProizvodModalClient() {
               <input
                 type="number"
                 name="cena"
-                value={form.cena}
-                onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="0.00"
                 min="0"
@@ -152,8 +109,6 @@ export default function DodajProizvodModalClient() {
               <input
                 type="number"
                 name="kolicina"
-                value={form.kolicina}
-                onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="0"
                 min="0"
@@ -171,8 +126,6 @@ export default function DodajProizvodModalClient() {
               <input
                 type="text"
                 name="kategorija_sr"
-                value={form.kategorija_sr}
-                onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="npr. bicikla, patike..."
               />
@@ -185,8 +138,6 @@ export default function DodajProizvodModalClient() {
               <input
                 type="text"
                 name="kategorija_en"
-                value={form.kategorija_en}
-                onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="e.g. bike, shoes..."
               />
@@ -200,8 +151,6 @@ export default function DodajProizvodModalClient() {
             </label>
             <textarea
               name="opis_sr"
-              value={form.opis_sr}
-              onChange={handleChange}
               rows={3}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Krataki opis proizvoda..."
@@ -214,16 +163,19 @@ export default function DodajProizvodModalClient() {
             </label>
             <textarea
               name="opis_en"
-              value={form.opis_en}
-              onChange={handleChange}
               rows={3}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               placeholder="Short product description..."
             />
           </div>
           {/* Image Upload */}
-          <CloudinaryUpload
-          />
+          <CloudinaryUpload onUpload={(url) => {
+            setImageUrl(url);
+            if (slikaInputRef.current) {
+              slikaInputRef.current.value = url;
+            }
+          }} />
+          <input type="hidden" name="slika" ref={slikaInputRef} value={imageUrl} />
 
           {/* Actions */}
           <div className="flex gap-3 pt-4 border-t border-gray-200">
@@ -237,7 +189,7 @@ export default function DodajProizvodModalClient() {
 
             <button
               type="button"
-              onClick={handleClose}
+              onClick={() => redirect('/proizvodi')}
               className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition font-medium"
             >
               Otkaži
@@ -248,7 +200,7 @@ export default function DodajProizvodModalClient() {
           <div className="pt-4 border-t border-gray-200">
             <button
               type="button"
-              onClick={() => router.push('/proizvodi/dodaj')}
+              onClick={() => { window.location.href = '/proizvodi/dodaj'; }}
               className="text-blue-600 hover:text-blue-700 text-sm font-medium"
             >
               Otvori kompletan form za dodavanje →
