@@ -32,6 +32,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon_simple.ico" sizes="any" />
         <link rel="icon" href="/favicon_simple.svg" type="image/svg+xml" />
         <link rel="icon" href="/favicon_simple.png" type="image/png" />
+        <link rel="shortcut icon" href="/favicon.ico" />
         {/* Apple touch icon for mobile shortcuts */}
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         {/* Manifest for PWA (optional, can be added later) */}
