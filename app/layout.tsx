@@ -28,10 +28,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+        {/* Standard favicon */}
+        <link rel="icon" href="/favicon_simple.ico" sizes="any" />
+        <link rel="icon" href="/favicon_simple.svg" type="image/svg+xml" />
+        <link rel="icon" href="/favicon_simple.png" type="image/png" />
+        {/* Apple touch icon for mobile shortcuts */}
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        {/* Manifest for PWA (optional, can be added later) */}
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
