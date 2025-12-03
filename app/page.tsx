@@ -1,14 +1,14 @@
-'use client';
 
-import React from 'react';
-import { usePathname } from 'next/navigation';
 import { FaUsers, FaBoxOpen, FaShoppingCart, FaChevronRight, FaEuroSign, FaClock } from "react-icons/fa";
 import Link from 'next/link';
+import { getStats } from '@/lib/actions';
+import React from "react";
 
-export default function AdminDashboard() {
-  const pathname = usePathname();
 
-  // Generate breadcrumbs from pathname
+export default async function AdminDashboard() {
+  // Pretpostavljam da koristiš pathname za breadcrumbs, ali u server komponenti možeš koristiti cookies ili headers
+  // Ako želiš breadcrumbs, možeš hardkodirati root ili koristiti segment iz propsa
+  const pathname = '/'; // Po potrebi zamijeni
   const pathSegments = pathname.split('/').filter(Boolean);
   const breadcrumbs = pathSegments.map((segment, index) => {
     const path = '/' + pathSegments.slice(0, index + 1).join('/');
@@ -16,13 +16,8 @@ export default function AdminDashboard() {
     return { label, path };
   });
 
-  // Mock stats - u realnoj aplikaciji bi ovo došlo iz API-ja
-  const stats = {
-    korisnici: 24,
-    proizvodi: 156,
-    porudzbine: 89,
-    prihod: 15420
-  };
+  // Direktno pozivam server action
+  const stats = await getStats();
 
   const quickActions = [
     {
@@ -88,7 +83,6 @@ export default function AdminDashboard() {
             </div>
           </div>
         </div>
-
         <div className="bg-green-50 p-6 rounded-lg border border-green-200">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
@@ -100,7 +94,6 @@ export default function AdminDashboard() {
             </div>
           </div>
         </div>
-
         <div className="bg-orange-50 p-6 rounded-lg border border-orange-200">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
@@ -112,7 +105,6 @@ export default function AdminDashboard() {
             </div>
           </div>
         </div>
-
         <div className="bg-purple-50 p-6 rounded-lg border border-purple-200">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
