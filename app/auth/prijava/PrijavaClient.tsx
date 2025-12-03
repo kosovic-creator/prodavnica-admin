@@ -2,9 +2,9 @@
 import { signIn } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useTranslation } from 'react-i18next';
+// ...existing code...
 
-import { FaSignInAlt, FaEnvelope, FaLock, FaGoogle, FaSpinner, FaChevronDown, FaUser, FaCheck } from "react-icons/fa";
+import { FaSignInAlt, FaEnvelope, FaLock, FaSpinner, FaChevronDown, FaUser, FaCheck } from "react-icons/fa";
 
 
 
@@ -250,14 +250,7 @@ export default function PrijavaClient({ lang }: PrijavaClientProps) {
               <span className="px-2 bg-white text-gray-500">{'Ili nastavi sa'}</span>
             </div>
           </div>
-          <button
-            onClick={() => signIn('google', { callbackUrl: '/' })}
-            disabled={loading}
-            className="w-full flex items-center justify-center gap-3 bg-blue-500 text-white px-4 py-3 rounded-lg shadow-md hover:bg-blue-900 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-base font-medium cursor-pointer"
-          >
-            <FaGoogle className="google-icon text-red-400" />
-                      {'Nastavi sa Google'}
-          </button>
+
         </div>
         <div className="mt-6 text-center border-t pt-4">
           <p className="text-gray-600 text-sm">
