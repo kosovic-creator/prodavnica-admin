@@ -14,9 +14,7 @@ const nextConfig = {
     ],
     qualities: [90],
   },
-  serverActions: {
-    bodySizeLimit: '10mb', // ili koliko ti treba
-  },
+
   webpack: (config: Configuration): Configuration => {
     if (config.resolve && config.resolve.alias) {
       (config.resolve.alias as Record<string, string>)['@'] = path.resolve(__dirname);
