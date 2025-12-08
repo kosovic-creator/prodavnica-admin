@@ -1,6 +1,7 @@
 import { getKorisnici } from '@/lib/actions/korisnici';
-import DeleteButton from './DeleteButton';
+import { deleteKorisnik } from '@/lib/actions/korisnici';
 import { Suspense } from 'react';
+import { revalidatePath } from 'next/cache';
 
 interface Korisnik {
   id: string;
@@ -22,24 +23,9 @@ interface Korisnik {
   } | null;
 };
 
-async function KorisniciTable({ page = 1, pageSize = 10 }: { page?: number, pageSize?: number }) {
-  const result = await getKorisnici(page, pageSize);
-
-  if (!result.success || !result.data) {
-    return (
-      <div className="text-center py-8 text-red-600">
-        {result.error || 'Greška pri učitavanju korisnika'}
-      </div>
-    );
-  }
-
-  const { korisnici, total } = result.data;
-  const totalPages = Math.ceil(total / pageSize);
-
+function KorisniciTable({ korisnici, total, page, pageSize, totalPages, deleteAction }: { korisnici: Korisnik[], total: number, page: number, pageSize: number, totalPages: number, deleteAction: (formData: FormData) => Promise<void> }) {
   return (
     <>
-
-
      {/* Korisnici tabela */}
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="overflow-x-auto">
@@ -108,10 +94,22 @@ async function KorisniciTable({ page = 1, pageSize = 10 }: { page?: number, page
                     {new Date(korisnik.kreiran).toLocaleDateString('sr-RS')}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <DeleteButton
-                      korisnikId={korisnik.id}
-                      korisnikIme={`${korisnik.ime} ${korisnik.prezime}`}
-                    />
+                    <form action={deleteAction}>
+                      <input type="hidden" name="korisnikId" value={korisnik.id} />
+                      <button
+                        type="submit"
+                        className="text-red-600 hover:text-red-900 px-2 py-1 rounded border border-red-200 bg-red-50"
+                      // title={`Obriši korisnika ${korisnik.ime} ${korisnik.prezime}`}
+                      // Optionally, add a confirmation dialog here
+                      // onClick={e => {
+                      //   if (!confirm(`Da li ste sigurni da želite da obrišete korisnika ${korisnik.ime} ${korisnik.prezime}?`)) {
+                      //     e.preventDefault();
+                      //   }
+                      // }}
+                      >
+                        Obriši
+                      </button>
+                    </form>
                   </td>
                 </tr>
               ))}
@@ -129,6 +127,24 @@ async function KorisniciTable({ page = 1, pageSize = 10 }: { page?: number, page
 }
 
 export default async function AdminKorisniciPage() {
+  async function deleteAction(formData: FormData): Promise<void> {
+    'use server';
+    const korisnikId = formData.get('korisnikId');
+    await deleteKorisnik(korisnikId as string);
+    revalidatePath('/korisnici');
+  }
+
+  const page = 1;
+  const pageSize = 10;
+  const result = await getKorisnici(page, pageSize);
+
+  if (!result.success || !result.data) {
+    return <div className="text-center py-8 text-red-600">{result.error || 'Greška pri učitavanju korisnika'}</div>;
+  }
+
+  const { korisnici, total } = result.data;
+  const totalPages = Math.ceil(total / pageSize);
+
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
@@ -146,7 +162,14 @@ export default async function AdminKorisniciPage() {
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500"></div>
         </div>
       }>
-        <KorisniciTable />
+        <KorisniciTable
+          korisnici={korisnici}
+          total={total}
+          page={page}
+          pageSize={pageSize}
+          totalPages={totalPages}
+          deleteAction={deleteAction}
+        />
       </Suspense>
     </div>
   );

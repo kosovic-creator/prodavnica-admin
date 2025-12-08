@@ -1,11 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-'use client';
-
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { toast } from 'react-hot-toast';
-import Loading from '../components/Loadning';
-import { getProizvodi,deleteProizvod } from '@/lib/actions/proizvodi';
+import { getProizvodi, deleteProizvod } from '@/lib/actions/proizvodi';
+import { revalidatePath } from 'next/cache';
 
 type Proizvod = {
   id: string;
@@ -17,64 +12,33 @@ type Proizvod = {
   kategorija_sr: string | null;
 };
 
-const ProizvodPage = () => {
-  const router = useRouter();
-  const [proizvodi, setProizvodi] = useState<Proizvod[]>([]);
-  const [loading, setLoading] = useState(true);
+export default async function ProizvodPage() {
 
-  useEffect(() => {
-    const loadProizvodi = async () => {
-      setLoading(true);
-      try {
-        const result = await getProizvodi(1, 50);
-        if (result.success && result.data) {
-          setProizvodi(
-            result.data.proizvodi.map((p: any) => ({
-              id: p.id,
-              cena: p.cena,
-              slika: Array.isArray(p.slike) && p.slike.length > 0 ? p.slike[0] : null,
-              kolicina: p.kolicina,
-              kreiran: p.kreiran,
-              naziv_sr: p.naziv_sr ?? null,
-              kategorija_sr: p.kategorija_sr ?? null,
-            }))
-          );
-        } else {
-          toast.error(result.error || 'Greška pri učitavanju proizvoda');
-        }
-      } catch (error) {
-        console.error('Error fetching proizvodi data:', error);
-        toast.error('Greška pri učitavanju proizvoda');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadProizvodi();
-  }, []);
-
-  if (loading) {
-    return <Loading />;
+  async function deleteAction(formData: FormData): Promise<void> {
+    'use server';
+    const proizvodId = formData.get('proizvodId');
+    await deleteProizvod(proizvodId as string);
+    revalidatePath('/proizvodi');
   }
- const handleDeleteProizvod = async (id: string) => {
-    const confirmDelete = window.confirm('Da li ste sigurni da želite da obrišete ovaj proizvod?');
-    if (!confirmDelete) return;
+  const page = 1;
+  const pageSize = 50;
+  const result = await getProizvodi(page, pageSize);
 
-    try {
-      const result = await deleteProizvod(id);
-      if (result.success) {
-        toast.success('Proizvod uspešno obrisan');
-        // Osveži listu proizvoda nakon brisanja
-        setProizvodi((prevProizvodi) => prevProizvodi.filter((proizvod) => proizvod.id !== id));
-      } else {
-        toast.error(result.error || 'Greška pri brisanju proizvoda');
-      }
-    } catch (error) {
-      console.error('Error deleting proizvod:', error);
-      toast.error('Greška pri brisanju proizvoda');
-    }
-  };
+  if (!result.success || !result.data) {
+    return <div className="text-center py-8 text-red-600">{result.error || 'Greška pri učitavanju proizvoda'}</div>;
+  }
 
+  const proizvodi: Proizvod[] = result.data.proizvodi.map((p: any) => ({
+    id: p.id,
+    cena: p.cena,
+    slika: Array.isArray(p.slike) && p.slike.length > 0 ? p.slike[0] : null,
+    kolicina: p.kolicina,
+    kreiran: p.kreiran,
+    naziv_sr: p.naziv_sr ?? null,
+    kategorija_sr: p.kategorija_sr ?? null,
+  }));
+
+  // useFormState hook (client) možeš dodati u posebnu Client komponentu za prikaz greške, ali ovde prikazujemo samo server-side
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
@@ -107,24 +71,16 @@ const ProizvodPage = () => {
                     {proizvod.kolicina} kom
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <button
-                      className="text-blue-600 hover:text-blue-900 mr-3 cursor-pointer"
-                      onClick={() => router.push(`/proizvodi/${proizvod.id}/pregled`)}
-                    >
-                      Detalji
-                    </button>
-                    <button
-                      className="text-green-600 hover:text-green-900 mr-3 cursor-pointer"
-                      onClick={() => router.push(`/proizvodi/izmeni/${proizvod.id}`)}
-                    >
-                      Izmeni
-                    </button>
-                    <button
-                      className="text-red-600 hover:text-red-900 cursor-pointer"
-                      onClick={() => handleDeleteProizvod(proizvod.id)}
-                    >
-                      Obriši
-                    </button>
+                    <form action={deleteAction}>
+                      <input type="hidden" name="proizvodId" value={proizvod.id} />
+                      <button
+                        type="submit"
+                        className="text-red-600 hover:text-red-900 cursor-pointer"
+                      >
+                        Obriši
+                      </button>
+                    </form>
+                    {/* Dodaj dugmad za detalje/izmenu ako želiš kao linkove */}
                   </td>
                 </tr>
               ))}
@@ -134,6 +90,4 @@ const ProizvodPage = () => {
       </div>
     </div>
   );
-};
-
-export default ProizvodPage;
+}

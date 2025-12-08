@@ -46,7 +46,7 @@ export default function DodajKorisnikaPage() {
 
         if (result.success) {
           toast.success('Korisnik je uspješno kreiran!');
-          router.push('/admin/korisnici');
+          router.push('/korisnici');
         } else {
           toast.error(result.error || 'Greška pri kreiranju korisnika');
         }
