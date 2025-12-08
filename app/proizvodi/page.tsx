@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getProizvodi, deleteProizvod } from '@/lib/actions/proizvodi';
+import Link from 'next/link';
 import { revalidatePath } from 'next/cache';
 
 type Proizvod = {
@@ -70,7 +71,15 @@ export default async function ProizvodPage() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     {proizvod.kolicina} kom
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex gap-2 items-center">
+                    {proizvod.id && typeof proizvod.id === 'string' && proizvod.id.trim() !== '' ? (
+                      <Link
+                        href={`/proizvodi/izmeni/${proizvod.id}`}
+                        className="text-blue-600 hover:text-blue-900 cursor-pointer"
+                      >
+                        Izmeni
+                      </Link>
+                    ) : null}
                     <form action={deleteAction}>
                       <input type="hidden" name="proizvodId" value={proizvod.id} />
                       <button
@@ -80,7 +89,6 @@ export default async function ProizvodPage() {
                         Obriši
                       </button>
                     </form>
-                    {/* Dodaj dugmad za detalje/izmenu ako želiš kao linkove */}
                   </td>
                 </tr>
               ))}
