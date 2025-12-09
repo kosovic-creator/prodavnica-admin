@@ -1,22 +1,19 @@
 "use client";
-import { useEffect, useState } from "react";
+import SuccessMessage from "../components/SuccessMessage";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function PorudzbineSuccess({ message }: { message?: string }) {
-  const [show, setShow] = useState(!!message);
+  const router = useRouter();
 
   useEffect(() => {
-    if (message) {
-      setShow(true);
-      const timer = setTimeout(() => setShow(false), 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [message]);
+    if (!message) return;
+    const timer = setTimeout(() => {
+      router.replace("/porudzbine");
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, [message, router]);
 
-  if (!show || !message) return null;
-
-  return (
-    <div className="fixed top-4 right-4 z-50 bg-green-100 border border-green-300 text-green-800 px-4 py-2 rounded shadow">
-      {message}
-    </div>
-  );
+  if (!message) return null;
+  return <SuccessMessage message={message} />;
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useTransition } from 'react';
-import SuccessMessage from '../../proizvodi/SuccessMessage';
+import SuccessMessage from '../../components/SuccessMessage';
 import { FaSave, FaTimes, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
 import { createKorisnik } from '@/lib/actions/korisnici';

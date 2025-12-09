@@ -149,4 +149,5 @@ export const authOptions: NextAuthOptions = {
     signIn: "/auth/prijava",
     error: "/auth/prijava",
   },
+  secret: process.env.NEXTAUTH_SECRET,
 };

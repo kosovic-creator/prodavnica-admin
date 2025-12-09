@@ -107,7 +107,7 @@ export async function createKorisnik(data: KorisnikData) {
       include: { podaciPreuzimanja: true }
     });
 
-    revalidatePath('/admin/korisnici');
+    revalidatePath('/korisnici');
 
     return {
       success: true,
@@ -136,7 +136,7 @@ export async function updateProfilKorisnika(id: string, data: {
     });
 
     revalidatePath('/profil');
-    revalidatePath('/admin/korisnici');
+    revalidatePath('/korisnici');
 
     return {
       success: true,
@@ -179,7 +179,7 @@ export async function updateKorisnik(data: UpdateKorisnikData) {
       include: { podaciPreuzimanja: true }
     });
 
-    revalidatePath('/admin/korisnici');
+    revalidatePath('/korisnici');
 
     return {
       success: true,
@@ -245,7 +245,7 @@ export async function deleteKorisnik(id: string) {
       });
     });
 
-    revalidatePath('/admin/korisnici');
+    revalidatePath('/korisnici');
 
     return {
       success: true,

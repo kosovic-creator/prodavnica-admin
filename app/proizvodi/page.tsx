@@ -1,13 +1,13 @@
+import ProizvodPageClient from "./ProizvodPageClient";
+import ProizvodiSuccess from "./ProizvodiSuccess";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 
 
 import { getProizvodi, deleteProizvod } from '@/lib/actions/proizvodi';
-import { revalidatePath } from 'next/cache';
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
-import ProizvodPageClient, { Proizvod } from './ProizvodPageClient';
+
 
 
 type ProizvodType = {
@@ -34,6 +34,7 @@ export default async function ProizvodPage({ searchParams }: { searchParams: Pro
   const params = await searchParams;
   const successMsg = params?.success;
 
+
   if (!result.success || !result.data) {
     return <div className="text-center py-8 text-red-600">{result.error || 'Greška pri učitavanju proizvoda'}</div>;
   }
@@ -48,5 +49,10 @@ export default async function ProizvodPage({ searchParams }: { searchParams: Pro
     kategorija_sr: p.kategorija_sr ?? null,
   }));
 
-  return <ProizvodPageClient proizvodi={proizvodi} successMsg={successMsg} />;
+  return (
+    <div className="p-6">
+      <ProizvodiSuccess message={successMsg} />
+      <ProizvodPageClient proizvodi={proizvodi} deleteAction={deleteAction} />
+    </div>
+  );
 }

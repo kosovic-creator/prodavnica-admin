@@ -10,7 +10,7 @@ import { ZodError } from 'zod';
 import { toast } from 'react-hot-toast';
 import { createProizvod } from '@/lib/actions/proizvodi';
 import Image from 'next/image';
-import SuccessMessage from '../SuccessMessage';
+import SuccessMessage from '../../components/SuccessMessage';
 
 
 function DodajProizvodPage() {

@@ -14,16 +14,16 @@ export default function KorisniciLayout({
 
   const korisniciMenuItems = [
     {
-      href: '/admin/korisnici',
+      href: '/korisnici',
       label: 'Svi korisnici',
       icon: FaUsers,
-      isActive: pathname === '/admin/korisnici'
+      isActive: pathname === '/korisnici'
     },
     {
-      href: '/admin/korisnici/dodaj',
+      href: '/korisnici/dodaj',
       label: 'Dodaj korisnika',
       icon: FaPlus,
-      isActive: pathname === '/admin/korisnici/dodaj'
+      isActive: pathname === '/korisnici/dodaj'
     }
   ];
 

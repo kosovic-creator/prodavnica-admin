@@ -1,5 +1,5 @@
 "use client";
-import SuccessMessage from "./SuccessMessage";
+
 import Link from "next/link";
 
 export type Proizvod = {
@@ -12,10 +12,9 @@ export type Proizvod = {
   kategorija_sr: string | null;
 };
 
-export default function ProizvodPageClient({ proizvodi, successMsg }: { proizvodi: Proizvod[]; successMsg?: string }) {
+function ProizvodPageClient({ proizvodi, deleteAction }: { proizvodi: Proizvod[]; deleteAction: (formData: FormData) => void }) {
   return (
     <div className="space-y-6">
-      {successMsg && <SuccessMessage message={successMsg} />}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
@@ -54,7 +53,7 @@ export default function ProizvodPageClient({ proizvodi, successMsg }: { proizvod
                         Izmeni
                       </Link>
                     ) : null}
-                    <form action="" method="post">
+                    <form action={deleteAction}>
                       <input type="hidden" name="proizvodId" value={proizvod.id} />
                       <button
                         type="submit"
@@ -73,3 +72,5 @@ export default function ProizvodPageClient({ proizvodi, successMsg }: { proizvod
     </div>
   );
 }
+
+export default ProizvodPageClient;

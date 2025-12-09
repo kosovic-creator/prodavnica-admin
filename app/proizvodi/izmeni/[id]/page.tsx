@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useEffect, useState, Suspense, useTransition } from 'react';
-import SuccessMessage from '../../SuccessMessage';
+import SuccessMessage from '../../../components/SuccessMessage';
 import { useParams, useRouter } from 'next/navigation';
 import { noviProizvodSchemaStatic } from '@/zod';
 import { FaSave, FaTimes } from 'react-icons/fa';

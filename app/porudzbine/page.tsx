@@ -1,8 +1,8 @@
 
 import { getPorudzbine, deletePorudzbinu } from '@/lib/actions/porudzbine';
-import PorudzbineSuccess from './PorudzbineSuccess';
-import PorudzbineSuccessWrapper from './PorudzbineSuccessWrapper';
+
 import { redirect } from 'next/navigation';
+import PorudzbineSuccess from './PorudzbineSuccess';
 
 // Server action za brisanje porudžbine
 export async function handleDeleteAction(formData: FormData) {
@@ -29,12 +29,6 @@ const formatCurrency = (amount: string | number | bigint) =>
     maximumFractionDigits: 0,
   }).format(typeof amount === 'string' ? Number(amount) : amount);
 
-const getStatusOptions = () => [
-  { value: 'pending', label: 'Na čekanju' },
-  { value: 'processing', label: 'U obradi' },
-  { value: 'completed', label: 'Završeno' },
-  { value: 'cancelled', label: 'Otkazano' },
-];
 
 export default async function PorudzbinePage({ searchParams }: { searchParams: Promise<{ success?: string }> }) {
   const result = await getPorudzbine();
@@ -43,7 +37,6 @@ export default async function PorudzbinePage({ searchParams }: { searchParams: P
     (sum, porudzbina) => sum + porudzbina.ukupno,
     0
   );
-
   const params = await searchParams;
   const successMsg = params?.success;
 
@@ -51,9 +44,7 @@ export default async function PorudzbinePage({ searchParams }: { searchParams: P
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Success message */}
-        <div>
-          <PorudzbineSuccessWrapper message={successMsg} />
-        </div>
+        <PorudzbineSuccess message={successMsg} />
         {/* Header */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
@@ -74,6 +65,7 @@ export default async function PorudzbinePage({ searchParams }: { searchParams: P
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          {/* Ukupno porudžbina */}
           <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
             <div className="flex items-center">
               <div className="p-3 rounded-full bg-blue-100">
@@ -87,7 +79,7 @@ export default async function PorudzbinePage({ searchParams }: { searchParams: P
               </div>
             </div>
           </div>
-
+          {/* Ukupan prihod */}
           <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
             <div className="flex items-center">
               <div className="p-3 rounded-full bg-green-100">
@@ -101,7 +93,7 @@ export default async function PorudzbinePage({ searchParams }: { searchParams: P
               </div>
             </div>
           </div>
-
+          {/* Prosečna vrednost */}
           <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
             <div className="flex items-center">
               <div className="p-3 rounded-full bg-purple-100">
@@ -160,7 +152,7 @@ export default async function PorudzbinePage({ searchParams }: { searchParams: P
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{formatDate(porudzbina.kreiran)}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <form action={handleDeleteAction} method="post">
+                      <form action={handleDeleteAction}>
                         <input type="hidden" name="id" value={porudzbina.id} />
                         <button type="submit" className="text-red-600 hover:text-red-900">Obriši</button>
                       </form>
