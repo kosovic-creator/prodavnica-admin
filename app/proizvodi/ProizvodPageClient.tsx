@@ -28,6 +28,10 @@ function ProizvodPageClient({ proizvodi, deleteAction }: { proizvodi: Proizvod[]
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
+              {/* Dodaj dugme/link za dodavanje proizvoda */}
+              <tr>
+                
+              </tr>
               {proizvodi.map((proizvod) => (
                 <tr key={proizvod.id} className="hover:bg-gray-50 transition-colors duration-200">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">

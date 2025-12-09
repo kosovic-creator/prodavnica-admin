@@ -7,9 +7,6 @@ import ProizvodiSuccess from "./ProizvodiSuccess";
 import { getProizvodi, deleteProizvod } from '@/lib/actions/proizvodi';
 import { redirect } from 'next/navigation';
 
-
-
-
 type ProizvodType = {
   id: string;
   cena: number;
