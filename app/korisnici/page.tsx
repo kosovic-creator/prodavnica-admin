@@ -1,7 +1,8 @@
 import { getKorisnici } from '@/lib/actions/korisnici';
 import { deleteKorisnik } from '@/lib/actions/korisnici';
 import { Suspense } from 'react';
-import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
+import KorisniciSuccess from './KorisniciSuccess';
 
 interface Korisnik {
   id: string;
@@ -23,7 +24,7 @@ interface Korisnik {
   } | null;
 };
 
-function KorisniciTable({ korisnici, total, page, pageSize, totalPages, deleteAction }: { korisnici: Korisnik[], total: number, page: number, pageSize: number, totalPages: number, deleteAction: (formData: FormData) => Promise<void> }) {
+function KorisniciTable({ korisnici, total, page, totalPages, deleteAction }: { korisnici: Korisnik[], total: number, page: number, totalPages: number, deleteAction: (formData: FormData) => Promise<void> }) {
   return (
     <>
      {/* Korisnici tabela */}
@@ -126,17 +127,20 @@ function KorisniciTable({ korisnici, total, page, pageSize, totalPages, deleteAc
   );
 }
 
-export default async function AdminKorisniciPage() {
+export default async function AdminKorisniciPage({ searchParams }: { searchParams: Promise<{ success?: string }> }) {
   async function deleteAction(formData: FormData): Promise<void> {
     'use server';
     const korisnikId = formData.get('korisnikId');
     await deleteKorisnik(korisnikId as string);
-    revalidatePath('/korisnici');
+    redirect('/korisnici?success=' + encodeURIComponent('Korisnik je uspješno obrisan'));
   }
 
   const page = 1;
   const pageSize = 10;
   const result = await getKorisnici(page, pageSize);
+
+  const params = await searchParams;
+  const successMsg = params?.success;
 
   if (!result.success || !result.data) {
     return <div className="text-center py-8 text-red-600">{result.error || 'Greška pri učitavanju korisnika'}</div>;
@@ -147,16 +151,10 @@ export default async function AdminKorisniciPage() {
 
   return (
     <div className="p-6">
+      <KorisniciSuccess message={successMsg} />
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Upravljanje korisnicima</h1>
-        {/* <Link
-          href="/admin/korisnici/dodaj"
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
-          Dodaj Korisnika
-        </Link> */}
       </div>
-
       <Suspense fallback={
         <div className="flex justify-center items-center h-64">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500"></div>
@@ -166,7 +164,6 @@ export default async function AdminKorisniciPage() {
           korisnici={korisnici}
           total={total}
           page={page}
-          pageSize={pageSize}
           totalPages={totalPages}
           deleteAction={deleteAction}
         />

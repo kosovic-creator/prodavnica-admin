@@ -1,5 +1,8 @@
 
 import { getPorudzbine, deletePorudzbinu } from '@/lib/actions/porudzbine';
+import PorudzbineSuccess from './PorudzbineSuccess';
+import PorudzbineSuccessWrapper from './PorudzbineSuccessWrapper';
+import { redirect } from 'next/navigation';
 
 // Server action za brisanje porudžbine
 export async function handleDeleteAction(formData: FormData) {
@@ -7,6 +10,8 @@ export async function handleDeleteAction(formData: FormData) {
   const id = formData.get('id');
   if (typeof id === 'string' && id) {
     await deletePorudzbinu(id);
+    // SSR redirect with success message
+    return redirect('/porudzbine?success=' + encodeURIComponent('Porudžbina je uspješno obrisana'));
   }
 }
 
@@ -31,7 +36,7 @@ const getStatusOptions = () => [
   { value: 'cancelled', label: 'Otkazano' },
 ];
 
-export default async function PorudzbinePage() {
+export default async function PorudzbinePage({ searchParams }: { searchParams: Promise<{ success?: string }> }) {
   const result = await getPorudzbine();
   const porudzbine = result.success && result.data ? result.data.porudzbine : [];
   const totalRevenue = porudzbine.reduce(
@@ -39,9 +44,16 @@ export default async function PorudzbinePage() {
     0
   );
 
+  const params = await searchParams;
+  const successMsg = params?.success;
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Success message */}
+        <div>
+          <PorudzbineSuccessWrapper message={successMsg} />
+        </div>
         {/* Header */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">

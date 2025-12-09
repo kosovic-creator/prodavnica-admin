@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useTransition } from 'react';
+import SuccessMessage from '../../proizvodi/SuccessMessage';
 import { FaSave, FaTimes, FaEye, FaEyeSlash } from "react-icons/fa";
 import { useRouter } from 'next/navigation';
 import { createKorisnik } from '@/lib/actions/korisnici';
@@ -32,6 +33,8 @@ export default function DodajKorisnikaPage() {
     }));
   };
 
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -45,8 +48,11 @@ export default function DodajKorisnikaPage() {
         const result = await createKorisnik(dataToSubmit);
 
         if (result.success) {
-          toast.success('Korisnik je uspješno kreiran!');
-          router.push('/korisnici');
+          setSuccessMsg('Korisnik je uspješno kreiran!');
+          setTimeout(() => {
+            setSuccessMsg(null);
+            router.push('/korisnici');
+          }, 2000);
         } else {
           toast.error(result.error || 'Greška pri kreiranju korisnika');
         }
@@ -59,6 +65,7 @@ export default function DodajKorisnikaPage() {
 
   return (
     <div>
+      {successMsg && <SuccessMessage message={successMsg} />}
       <div className="mb-6">
         <h2 className="text-xl font-semibold text-gray-900">Dodaj novog korisnika</h2>
         <p className="text-gray-600 mt-1">Unesite podatke za novi korisnički nalog</p>

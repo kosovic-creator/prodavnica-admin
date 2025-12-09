@@ -2,9 +2,9 @@
 'use client';
 
 import React, { useEffect, useState, Suspense, useTransition } from 'react';
+import SuccessMessage from '../../SuccessMessage';
 import { useParams, useRouter } from 'next/navigation';
 import { noviProizvodSchemaStatic } from '@/zod';
-import ImageUpload from '../../../components/ImageUpload';
 import { FaSave, FaTimes } from 'react-icons/fa';
 import { Proizvod } from '@/types';
 import { getProizvodById, updateProizvod } from '@/lib/actions/proizvodi';
@@ -17,6 +17,7 @@ function IzmeniProizvodContent() {
   const router = useRouter();
   const [form, setForm] = useState<Proizvod | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({});
   const [activeLanguage, setActiveLanguage] = useState<'sr' | 'en'>('sr');
   const [loading, setLoading] = useState(true);
@@ -137,8 +138,11 @@ function IzmeniProizvodContent() {
         });
 
         if (result.success) {
-          toast.success('Proizvod je uspešno ažuriran!');
-          router.push('/proizvodi');
+          setSuccessMsg('Proizvod je uspešno ažuriran!');
+          setTimeout(() => {
+            setSuccessMsg(null);
+            router.push('/proizvodi');
+          }, 2000);
         } else {
           setError(result.error || 'Greška pri ažuriranju proizvoda!');
           toast.error(result.error || 'Greška pri ažuriranju proizvoda!');
@@ -175,6 +179,7 @@ function IzmeniProizvodContent() {
 
   return (
     <div className="admin-container">
+      {successMsg && <SuccessMessage message={successMsg} />}
       <h2 className="text-2xl text-blue-600 font-semibold mb-6">Izmeni proizvod</h2>
       <div className="flex gap-2 mb-4">
         <button

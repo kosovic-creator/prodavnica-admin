@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useTransition } from 'react';
+
 import { useRouter } from 'next/navigation';
 import CloudinaryUpload from '../../components/CloudinaryUpload';
 import { FaPlus, FaTimes } from 'react-icons/fa';
@@ -9,11 +10,12 @@ import { ZodError } from 'zod';
 import { toast } from 'react-hot-toast';
 import { createProizvod } from '@/lib/actions/proizvodi';
 import Image from 'next/image';
+import SuccessMessage from '../SuccessMessage';
+
 
 function DodajProizvodPage() {
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
-
 
     const [form, setForm] = useState({
         cena: '',
@@ -35,6 +37,7 @@ function DodajProizvodPage() {
     const [activeLanguage, setActiveLanguage] = useState<'sr' | 'en'>('sr');
     const [error, setError] = useState<string | null>(null);
     const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+    const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -135,8 +138,11 @@ function DodajProizvodPage() {
                 const result = await createProizvod(payload);
 
                 if (result.success) {
-                    toast.success('Proizvod je uspešno dodat!');
-                    router.push('/proizvodi');
+                    setSuccessMsg('Proizvod je uspešno dodat!');
+                    setTimeout(() => {
+                        setSuccessMsg(null);
+                        router.push('/proizvodi');
+                    }, 2000);
                 } else {
                     setError(result.error || 'Greška pri kreiranju proizvoda!');
                     toast.error(result.error || 'Greška pri kreiranju proizvoda!');
@@ -151,6 +157,7 @@ function DodajProizvodPage() {
 
     return (
         <div className="max-w-2xl mx-auto p-8">
+            {successMsg && <SuccessMessage message={successMsg} />}
             <h2 className="text-2xl text-blue-600 font-semibold mb-6">Dodaj novi proizvod</h2>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
