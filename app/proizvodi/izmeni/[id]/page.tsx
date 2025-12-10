@@ -6,6 +6,7 @@ import { izmeniProizvodAction } from './actions';
 import CloudinaryUploadField from './CloudinaryUploadField';
 
 export default async function IzmeniProizvodPage({ params }: { params: { id: string } }) {
+  console.log("params:", params);
   const id = params.id;
   const result = await getProizvodById(id);
 
