@@ -1,7 +1,6 @@
-
+'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { registrujKorisnika } from '@/lib/actions';
 import { registracijaSchema } from '@/zod';
 
 
@@ -39,14 +38,23 @@ export default function RegistracijaPage() {
       return;
     }
 
-    const regResult = await registrujKorisnika({ email, lozinka, ime, prezime });
-    if (!regResult.success) {
-      setMessage(regResult.error || 'Greška pri registraciji.');
-      return;
+    try {
+      const res = await fetch('/api/auth/registracija', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, lozinka, ime, prezime })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setSuccess(true);
+        setMessage('Uspješna registracija! Prijavite se.');
+        e.currentTarget.reset();
+      } else {
+        setMessage(data.error || 'Greška pri registraciji.');
+      }
+    } catch (err) {
+      setMessage('Greška pri komunikaciji sa serverom.');
     }
-    setSuccess(true);
-    setMessage('Uspješna registracija! Prijavite se.');
-    e.currentTarget.reset();
   }
 
   useEffect(() => {
