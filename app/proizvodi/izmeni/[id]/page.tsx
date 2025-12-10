@@ -139,10 +139,7 @@ function IzmeniProizvodContent() {
 
         if (result.success) {
           setSuccessMsg('Proizvod je uspešno ažuriran!');
-          setTimeout(() => {
-            setSuccessMsg(null);
-            router.push('/proizvodi');
-          }, 2000);
+          router.push('/proizvodi');
         } else {
           setError(result.error || 'Greška pri ažuriranju proizvoda!');
           toast.error(result.error || 'Greška pri ažuriranju proizvoda!');
