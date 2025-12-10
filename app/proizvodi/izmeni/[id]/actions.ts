@@ -4,6 +4,11 @@ import { redirect } from "next/navigation";
 
 export async function izmeniProizvodAction(formData: FormData) {
   const id = formData.get("id") as string;
+  console.log("ID iz forme:", id);
+  if (!id) {
+    console.error("ID nije prosleđen u izmeniProizvodAction");
+    return;
+  }
   const naziv_sr = formData.get("naziv_sr") as string;
   const naziv_en = formData.get("naziv_en") as string;
   const opis_sr = formData.get("opis_sr") as string;
@@ -33,9 +38,11 @@ export async function izmeniProizvodAction(formData: FormData) {
 
   if (result.success) {
     redirect("/proizvodi");
-    // Do not return anything after redirect
     return;
   }
-  // Optionally, handle error (e.g., show toast, log, etc.), but do not return a value
-  // No return statement here
+  // Ako nije success, samo loguj, ne vraćaj ništa
+  if (result.error) {
+    console.error("Greška pri izmeni proizvoda:", result.error);
+  }
+  return;
 }
