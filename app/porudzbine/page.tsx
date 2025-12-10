@@ -1,6 +1,5 @@
-
 import { getPorudzbine, deletePorudzbinu } from '@/lib/actions/porudzbine';
-
+import PorudzbineSkeleton from './PorudzbineSkeleton';
 import { redirect } from 'next/navigation';
 import PorudzbineSuccess from './PorudzbineSuccess';
 
@@ -32,6 +31,9 @@ const formatCurrency = (amount: string | number | bigint) =>
 
 export default async function PorudzbinePage({ searchParams }: { searchParams: Promise<{ success?: string }> }) {
   const result = await getPorudzbine();
+  if (!result.success || !result.data) {
+    return <PorudzbineSkeleton />;
+  }
   const porudzbine = result.success && result.data ? result.data.porudzbine : [];
   const totalRevenue = porudzbine.reduce(
     (sum, porudzbina) => sum + porudzbina.ukupno,

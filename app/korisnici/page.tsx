@@ -3,6 +3,7 @@ import { deleteKorisnik } from '@/lib/actions/korisnici';
 import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
 import KorisniciSuccess from './KorisniciSuccess';
+import KorisniciSkeleton from './KorisniciSkeleton';
 
 interface Korisnik {
   id: string;
@@ -100,13 +101,6 @@ function KorisniciTable({ korisnici, total, page, totalPages, deleteAction }: { 
                       <button
                         type="submit"
                         className="text-red-600 hover:text-red-900 px-2 py-1 rounded border border-red-200 bg-red-50"
-                      // title={`Obriši korisnika ${korisnik.ime} ${korisnik.prezime}`}
-                      // Optionally, add a confirmation dialog here
-                      // onClick={e => {
-                      //   if (!confirm(`Da li ste sigurni da želite da obrišete korisnika ${korisnik.ime} ${korisnik.prezime}?`)) {
-                      //     e.preventDefault();
-                      //   }
-                      // }}
                       >
                         Obriši
                       </button>
@@ -155,11 +149,7 @@ export default async function AdminKorisniciPage({ searchParams }: { searchParam
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Upravljanje korisnicima</h1>
       </div>
-      <Suspense fallback={
-        <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500"></div>
-        </div>
-      }>
+      <Suspense fallback={<KorisniciSkeleton />}>
         <KorisniciTable
           korisnici={korisnici}
           total={total}

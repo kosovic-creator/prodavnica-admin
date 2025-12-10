@@ -38,4 +38,10 @@ export const registracijaSchema = z.object({
 });
 
 
+export const prijavaSchema = z.object({
+  email: z.string().email({ message: 'Neispravan email.' }),
+  lozinka: z.string().min(6, { message: 'Lozinka mora imati najmanje 6 karaktera.' }),
+});
+
+
 

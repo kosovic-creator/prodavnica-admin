@@ -1,12 +1,20 @@
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { registrujKorisnika } from '@/lib/actions';
-import { registracijaSchema} from '@/zod';
-import { redirect } from 'next/navigation';
+import { registracijaSchema } from '@/zod';
 
-export default function RegistracijaPage({ searchParams }: { searchParams?: { msg?: string } }) {
-  const message = searchParams?.msg || '';
 
-  async function handleRegistracija(formData: FormData) {
-    'use server';
+export default function RegistracijaPage() {
+  const [message, setMessage] = useState<string>("");
+  const [success, setSuccess] = useState<boolean>(false);
+  const router = useRouter();
+
+  async function handleRegistracija(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setMessage("");
+    setSuccess(false);
+    const formData = new FormData(e.currentTarget);
     const email = formData.get('email') as string;
     const lozinka = formData.get('lozinka') as string;
     const potvrdaLozinke = formData.get('potvrdaLozinke') as string;
@@ -20,23 +28,35 @@ export default function RegistracijaPage({ searchParams }: { searchParams?: { ms
       ime: ime || '',
       prezime: prezime || '',
       uloga: 'admin', // default
-
     });
     if (!result.success) {
       const msg = result.error.issues[0]?.message || 'Greška pri validaciji.';
-      redirect(`/auth/registracija?msg=${encodeURIComponent(msg)}`);
+      setMessage(msg);
+      return;
     }
     if (lozinka !== potvrdaLozinke) {
-      redirect(`/auth/registracija?msg=${encodeURIComponent('Lozinke se ne poklapaju')}`);
+      setMessage('Lozinke se ne poklapaju');
+      return;
     }
 
     const regResult = await registrujKorisnika({ email, lozinka, ime, prezime });
     if (!regResult.success) {
-      redirect(`/auth/registracija?msg=${encodeURIComponent(regResult.error || 'Greška pri registraciji.')}`);
+      setMessage(regResult.error || 'Greška pri registraciji.');
+      return;
     }
-    // Uspjeh: redirect na login sa porukom
-    redirect(`/auth/prijava?msg=${encodeURIComponent('Uspješna registracija! Prijavite se.')}`);
+    setSuccess(true);
+    setMessage('Uspješna registracija! Prijavite se.');
+    e.currentTarget.reset();
   }
+
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => {
+        router.push('/auth/prijava');
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [success, router]);
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-8 bg-gray-50">
@@ -45,9 +65,9 @@ export default function RegistracijaPage({ searchParams }: { searchParams?: { ms
           Registracija
         </h1>
         {message && (
-          <div className="mb-4 text-center text-red-600 font-semibold">{message}</div>
+          <div className={`mb-4 text-center font-semibold ${success ? 'text-green-600' : 'text-red-600'}`}>{message}</div>
         )}
-        <form action={handleRegistracija} className="space-y-4">
+        <form onSubmit={handleRegistracija} className="space-y-4">
           <div className="flex items-center gap-3 border border-gray-300 p-3 rounded-lg hover:border-blue-400 transition-colors">
             <input
               id="email"
