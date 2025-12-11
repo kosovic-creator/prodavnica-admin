@@ -1,67 +1,44 @@
-import ProizvodPageClient from "./ProizvodPageClient";
-import ProizvodiSuccess from "./ProizvodiSuccess";
-import ProizvodiSkeleton from "./ProizvodiSkeleton";
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-
-
-import { getProizvodi, deleteProizvod } from '@/lib/actions/proizvodi';
+// ...existing code...
+import prisma from '@/lib/prisma';
+import Link from 'next/link';
+import Navbar from '@/app/components/Navbar';
+import { deleteProizvod } from '@/lib/actions/proizvodi';
 import { redirect } from 'next/navigation';
 
-type ProizvodType = {
-  id: string;
-  cena: number;
-  slika: string | null;
-  kolicina: number;
-  kreiran: Date;
-  naziv_sr: string | null;
-  kategorija_sr: string | null;
-};
-
-export default async function ProizvodPage({ searchParams }: { searchParams: Promise<{ success?: string }> }) {
-  async function deleteAction(formData: FormData): Promise<void> {
+export default async function ProizvodiPage() {
+  async function handleDelete(formData: FormData) {
     'use server';
-    const proizvodId = formData.get('proizvodId');
-    await deleteProizvod(proizvodId as string);
-    redirect('/proizvodi?success=' + encodeURIComponent('Artikal je uspješno obrisan'));
+    const id = formData.get('id') as string;
+    await deleteProizvod(id);
+    redirect('/proizvodi');
   }
-  const page = 1;
-  const pageSize = 50;
-  let proizvodi: ProizvodType[] = [];
-  let successMsg = "";
-  let errorMsg = "";
-  let loading = false;
-  try {
-    const result = await getProizvodi(page, pageSize);
-    const params = await searchParams;
-    successMsg = params?.success || "";
-    if (!result.success || !result.data) {
-      errorMsg = result.error || "Greška pri učitavanju proizvoda";
-    } else {
-      proizvodi = result.data.proizvodi.map((p: any) => ({
-        id: p.id,
-        cena: p.cena,
-        slika: Array.isArray(p.slike) && p.slike.length > 0 ? p.slike[0] : null,
-        kolicina: p.kolicina,
-        kreiran: p.kreiran,
-        naziv_sr: p.naziv_sr ?? null,
-        kategorija_sr: p.kategorija_sr ?? null,
-      }));
-    }
-  } catch {
-    loading = true;
-  }
+
+  const proizvodi = await prisma.proizvod.findMany();
 
   return (
-    <div className="p-6">
-      <ProizvodiSuccess message={successMsg} />
-      {loading ? (
-        <ProizvodiSkeleton />
-      ) : errorMsg ? (
-        <div className="text-center py-8 text-red-600">{errorMsg}</div>
-      ) : (
-        <ProizvodPageClient proizvodi={proizvodi} deleteAction={deleteAction} />
-      )}
-    </div>
+    <>
+      <Navbar />
+      <div className="max-w-3xl mx-auto p-6">
+        <h1 className="text-3xl font-bold mb-6 text-blue-700">Proizvodi</h1>
+        <Link href="/proizvodi/dodaj" className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition mb-6 inline-block">Dodaj proizvod</Link>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {proizvodi.map((p) => (
+            <div key={p.id} className="border rounded-lg p-4 bg-white shadow flex flex-col gap-2">
+              <div className="font-semibold text-lg text-blue-800">{p.naziv_sr}</div>
+              <div className="text-gray-700">Cena: <span className="font-bold">{p.cena} RSD</span></div>
+              <div className="text-gray-700">Količina: {p.kolicina}</div>
+              <div className="text-gray-700">Kategorija: {p.kategorija_sr}</div>
+              <div className="flex gap-2 mt-2">
+                <Link href={`/proizvodi/izmeni/${p.id}`} className="bg-yellow-400 text-black px-3 py-1 rounded hover:bg-yellow-500 transition">Izmeni</Link>
+                <form action={handleDelete}>
+                  <input type="hidden" name="id" value={p.id} />
+                  <button type="submit" className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 transition">Obriši</button>
+                </form>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
   );
 }

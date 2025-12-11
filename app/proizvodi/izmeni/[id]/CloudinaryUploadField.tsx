@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+// Pretpostavljamo da postoji CloudinaryUpload komponenta u app/components/CloudinaryUpload.tsx
 import CloudinaryUpload from '../../../components/CloudinaryUpload';
 
 export default function CloudinaryUploadField({ initialImages = [] }: { initialImages?: string[] }) {

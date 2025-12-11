@@ -25,7 +25,14 @@ interface Korisnik {
   } | null;
 };
 
-function KorisniciTable({ korisnici, total, page, totalPages, deleteAction }: { korisnici: Korisnik[], total: number, page: number, totalPages: number, deleteAction: (formData: FormData) => Promise<void> }) {
+// Server komponenta za prikaz tabele korisnika i brisanje
+export function KorisniciTable({ korisnici, total, page, totalPages }: { korisnici: Korisnik[], total: number, page: number, totalPages: number }) {
+  async function deleteAction(formData: FormData): Promise<void> {
+    'use server';
+    const korisnikId = formData.get('korisnikId');
+    await deleteKorisnik(korisnikId as string);
+    redirect('/korisnici?success=' + encodeURIComponent('Korisnik je uspješno obrisan'));
+  }
   return (
     <>
      {/* Korisnici tabela */}
@@ -122,12 +129,6 @@ function KorisniciTable({ korisnici, total, page, totalPages, deleteAction }: { 
 }
 
 export default async function AdminKorisniciPage({ searchParams }: { searchParams: Promise<{ success?: string }> }) {
-  async function deleteAction(formData: FormData): Promise<void> {
-    'use server';
-    const korisnikId = formData.get('korisnikId');
-    await deleteKorisnik(korisnikId as string);
-    redirect('/korisnici?success=' + encodeURIComponent('Korisnik je uspješno obrisan'));
-  }
 
   const page = 1;
   const pageSize = 10;
@@ -155,7 +156,6 @@ export default async function AdminKorisniciPage({ searchParams }: { searchParam
           total={total}
           page={page}
           totalPages={totalPages}
-          deleteAction={deleteAction}
         />
       </Suspense>
     </div>

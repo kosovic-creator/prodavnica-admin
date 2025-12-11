@@ -3,7 +3,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-import ClientLayout from "./components/ClientLayout";
+
+import AuthProvider from "./components/AuthProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,9 +41,26 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ClientLayout>
-          {children}
-        </ClientLayout>
+        <AuthProvider>
+          <div className="min-h-screen bg-gray-50">
+            <div className="mb-8">
+              {/* Navbar prikaz */}
+              {/* Ako Navbar nije importovan, dodaj import na vrhu fajla: */}
+              {/* import Navbar from '@/app/components/Navbar'; */}
+              <nav className="bg-blue-700 text-white px-6 py-3 flex items-center justify-between shadow">
+                <div className="font-bold text-xl">
+                  <a href="/proizvodi">Prodavnica Admin</a>
+                </div>
+                <div className="flex gap-6">
+                  <a href="/proizvodi" className="hover:underline">Proizvodi</a>
+                  <a href="/porudzbine" className="hover:underline">Porudžbine</a>
+                  <a href="/korisnici" className="hover:underline">Korisnici</a>
+                </div>
+              </nav>
+            </div>
+            {children}
+          </div>
+        </AuthProvider>
       </body>
     </html>
   );
