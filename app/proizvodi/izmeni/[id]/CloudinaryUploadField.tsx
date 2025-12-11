@@ -32,8 +32,10 @@ export default function CloudinaryUploadField({ initialImages = [] }: { initialI
         ))}
         <CloudinaryUpload onUpload={handleUpload} />
       </div>
-      {/* Hidden input for form submit */}
-      <input type="hidden" name="slike" value={JSON.stringify(images)} />
+      {/* Hidden inputs for form submit */}
+      {images.map((img, idx) => (
+        <input key={img + idx} type="hidden" name="slike" value={img} />
+      ))}
       <div className="text-sm text-gray-500">Možete dodati više slika. Prva slika će biti glavna.</div>
     </div>
   );
