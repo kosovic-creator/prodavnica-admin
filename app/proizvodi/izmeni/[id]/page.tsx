@@ -50,9 +50,9 @@ export async function izmeniProizvodAction(formData: FormData) {
 
 import CloudinaryUploadField from './CloudinaryUploadField';
 
-export default async function IzmeniProizvodPage({ params }: { params: { id: string } }) {
-  console.log("params:", params);
-  const id = params.id;
+export default async function IzmeniProizvodPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  console.log("id:", id);
   const result = await getProizvodById(id);
 
   if (!result.success || !result.data) {
