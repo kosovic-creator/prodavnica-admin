@@ -67,7 +67,6 @@ export default async function IzmeniProizvodPage({ params }: { params: Promise<{
 
   return (
     <form action={izmeniProizvodAction}>
-      <input type="hidden" name="id" value={form.id} />
       <input type="text" name="test" defaultValue="test" />
       <button type="submit">Test</button>
     </form>
