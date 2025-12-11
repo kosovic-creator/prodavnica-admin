@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { createProizvod } from '@/lib/actions/proizvodi';
 import { z } from 'zod';
 import CloudinaryUploadField from '../izmeni/[id]/CloudinaryUploadField';
+import Link from 'next/link';
 
 export async function dodajProizvodAction(formData: FormData) {
     'use server';
@@ -43,24 +44,32 @@ export async function dodajProizvodAction(formData: FormData) {
         slike: parsed.data.slike ?? [],
     });
     redirect('/proizvodi');
-}
 // ...existing code...
+}
 
 export default function DodajProizvodPage() {
     return (
-        <form action={dodajProizvodAction} className="p-6 space-y-4">
-            <input type="text" name="naziv_sr" placeholder="Naziv (SR)" required />
-            <input type="text" name="naziv_en" placeholder="Naziv (EN)" required />
-            <textarea name="opis_sr" placeholder="Opis (SR)" />
-            <textarea name="opis_en" placeholder="Opis (EN)" />
-            <input type="text" name="karakteristike_sr" placeholder="Karakteristike (SR)" />
-            <input type="text" name="karakteristike_en" placeholder="Karakteristike (EN)" />
-            <input type="text" name="kategorija_sr" placeholder="Kategorija (SR)" required />
-            <input type="text" name="kategorija_en" placeholder="Kategorija (EN)" required />
-            <input type="number" name="cena" placeholder="Cena" required />
-            <input type="number" name="kolicina" placeholder="Količina" required />
-            <CloudinaryUploadField initialImages={[]} />
-            <button type="submit" className="btn btn-primary">Sačuvaj</button>
-        </form>
+        <div className="max-w-xl mx-auto mt-8">
+            <div className="bg-white rounded-lg shadow border border-gray-200 p-8">
+                <h2 className="text-2xl font-bold mb-6 text-blue-700">Dodaj proizvod</h2>
+                <form action={dodajProizvodAction} className="space-y-4">
+                    <input type="text" name="naziv_sr" placeholder="Naziv (SR)" required className="input input-bordered w-full" />
+                    <input type="text" name="naziv_en" placeholder="Naziv (EN)" required className="input input-bordered w-full" />
+                    <textarea name="opis_sr" placeholder="Opis (SR)" className="textarea textarea-bordered w-full" />
+                    <textarea name="opis_en" placeholder="Opis (EN)" className="textarea textarea-bordered w-full" />
+                    <input type="text" name="karakteristike_sr" placeholder="Karakteristike (SR)" className="input input-bordered w-full" />
+                    <input type="text" name="karakteristike_en" placeholder="Karakteristike (EN)" className="input input-bordered w-full" />
+                    <input type="text" name="kategorija_sr" placeholder="Kategorija (SR)" required className="input input-bordered w-full" />
+                    <input type="text" name="kategorija_en" placeholder="Kategorija (EN)" required className="input input-bordered w-full" />
+                    <input type="number" name="cena" placeholder="Cena" required className="input input-bordered w-full" />
+                    <input type="number" name="kolicina" placeholder="Količina" required className="input input-bordered w-full" />
+                    <CloudinaryUploadField initialImages={[]} />
+                    <div className="flex gap-2">
+                        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition w-full">Sačuvaj</button>
+                        <Link href="/proizvodi" className="bg-gray-200 text-gray-700 px-4 py-2 rounded shadow hover:bg-gray-300 transition w-full text-center">Odustani</Link>
+                    </div>
+                </form>
+            </div>
+        </div>
     );
 }

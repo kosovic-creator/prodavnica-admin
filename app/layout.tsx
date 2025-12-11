@@ -5,6 +5,7 @@ import "./globals.css";
 
 
 import AuthProvider from "./components/AuthProvider";
+import Navbar from "@/app/components/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,10 +30,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Standard favicon */}
-        {/* <link rel="icon" href="/favicon_simple.ico" sizes="any" />
-        <link rel="icon" href="/favicon_simple.svg" type="image/svg+xml" />
-        <link rel="icon" href="/favicon_simple.png" type="image/png" /> */}
         <link rel="shortcut icon" href="/favicon.ico" />
         {/* Apple touch icon for mobile shortcuts */}
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -43,21 +40,7 @@ export default function RootLayout({
       >
         <AuthProvider>
           <div className="min-h-screen bg-gray-50">
-            <div className="mb-8">
-              {/* Navbar prikaz */}
-              {/* Ako Navbar nije importovan, dodaj import na vrhu fajla: */}
-              {/* import Navbar from '@/app/components/Navbar'; */}
-              <nav className="bg-blue-700 text-white px-6 py-3 flex items-center justify-between shadow">
-                <div className="font-bold text-xl">
-                  <a href="/proizvodi">Prodavnica Admin</a>
-                </div>
-                <div className="flex gap-6">
-                  <a href="/proizvodi" className="hover:underline">Proizvodi</a>
-                  <a href="/porudzbine" className="hover:underline">Porudžbine</a>
-                  <a href="/korisnici" className="hover:underline">Korisnici</a>
-                </div>
-              </nav>
-            </div>
+            <Navbar />
             {children}
           </div>
         </AuthProvider>
