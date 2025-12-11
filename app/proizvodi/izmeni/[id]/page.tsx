@@ -168,7 +168,7 @@ export default async function IzmeniProizvodPage({ params }: { params: Promise<{
           required
         />
       </div>
-      <CloudinaryUploadField initialImages={form.slike || []} />
+      {/* <CloudinaryUploadField initialImages={form.slike || []} /> */}
       <div className="flex gap-4 mt-6">
         <button
           type="submit"
