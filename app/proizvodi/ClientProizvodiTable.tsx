@@ -53,15 +53,15 @@ const ClientProizvodiTable: React.FC<Props> = ({ proizvodi, total, totalPages, p
   }, []);
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
+    <div className="max-w-5xl mx-auto p-6 text-gray-900 dark:text-gray-900">
       {success && <SuccessMessage message={success} />}
       {error && (
         <div className="text-red-600 bg-red-50 border border-red-200 rounded-lg p-4 text-center mb-4">{error}</div>
       )}
       {/* Header section */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold">Upravljanje proizvodima</h1>
-        <p className="text-gray-600 mt-2">Dodaj, izmijeni ili ukloni proizvode iz prodavnice</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-900">Upravljanje proizvodima</h1>
+        <p className="text-gray-600 dark:text-gray-700 mt-2">Dodaj, izmijeni ili ukloni proizvode iz prodavnice</p>
       </div>
       {/* Navigation tabs */}
       <div className="flex items-center gap-4 mb-6 border-b pb-2">
@@ -70,7 +70,7 @@ const ClientProizvodiTable: React.FC<Props> = ({ proizvodi, total, totalPages, p
       </div>
       {/* Table */}
       <div className="overflow-x-auto rounded-lg shadow border">
-        <table className="min-w-full divide-y divide-gray-200">
+        <table className="min-w-full divide-y divide-gray-200 text-gray-900 dark:text-gray-900">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Naziv (SR)</th>
@@ -82,7 +82,7 @@ const ClientProizvodiTable: React.FC<Props> = ({ proizvodi, total, totalPages, p
           <tbody className="bg-white divide-y divide-gray-200">
             {proizvodi.length === 0 ? (
               <tr>
-                <td colSpan={4} className="px-6 py-4 text-center text-gray-400">Nema proizvoda.</td>
+                <td colSpan={4} className="px-6 py-4 text-center text-gray-400 dark:text-gray-500">Nema proizvoda.</td>
               </tr>
             ) : (
               proizvodi.map((proizvod) => (
@@ -108,7 +108,7 @@ const ClientProizvodiTable: React.FC<Props> = ({ proizvodi, total, totalPages, p
       </div>
       {/* Paginate and info */}
       <div className="flex items-center justify-between mt-6">
-        <span>Ukupno proizvoda: {total} | Stranica {page} od {totalPages}</span>
+        <span className="text-gray-600 dark:text-gray-700">Ukupno proizvoda: {total} | Stranica {page} od {totalPages}</span>
         <div className="flex gap-2">
           <Link
             href={`/proizvodi?page=${page - 1}`}
